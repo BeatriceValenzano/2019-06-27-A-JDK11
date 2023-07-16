@@ -34,7 +34,7 @@ public class CrimesController {
     private Button btnAnalisi; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxArco"
-    private ComboBox<?> boxArco; // Value injected by FXMLLoader
+    private ComboBox<String> boxArco; // Value injected by FXMLLoader
 
     @FXML // fx:id="btnPercorso"
     private Button btnPercorso; // Value injected by FXMLLoader
@@ -45,19 +45,36 @@ public class CrimesController {
     @FXML
     void doCreaGrafo(ActionEvent event) {
     	txtResult.clear();
+    	this.boxArco.getItems().clear();
     	String categoria = this.boxCategoria.getValue();
     	Integer anno = this.boxAnno.getValue();
     	if(categoria == null || anno == null) {
     		txtResult.appendText("Selezionare una categoria e un anno!");
+    		return;
     	}
     	model.creaGrafo(anno, categoria);
-    	txtResult.appendText(model.getArchiMax() + "\n");
+    	for(String s : model.getArchiMax()) {
+    		txtResult.appendText(s + "\n");
+    		String[] parts = s.split(" - ");
+    		this.boxArco.getItems().add(parts[0] + " <-> " + parts[1]);
+    	}
+    	
     }
 
     @FXML
     void doCalcolaPercorso(ActionEvent event) {
     	txtResult.clear();
-    	txtResult.appendText("Calcola percorso...\n");
+    	String arco = this.boxArco.getValue();
+    	if(arco == null) {
+    		txtResult.appendText("Selezionare un arco!\n");
+    	} else {
+    		String[] parts = arco.split(" <-> ");
+    		txtResult.appendText("Il percorso migliore tra " + parts[0] + " e " + parts[1] + " è:\n");
+    		for(String s : model.percorsoMigliore(parts[0], parts[1])) {
+    			txtResult.appendText(s + "\n");
+    		}
+    		
+    	}
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
