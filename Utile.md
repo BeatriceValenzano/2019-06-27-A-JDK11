@@ -102,3 +102,15 @@ public List<Airport> trovaPercorso2(Airport origin, Airport destination){
 	 		return null;
 	 	}
 	}
+
+	
+	
+Query 1
+
+
+
+SELECT gds1.Retailer_code AS rc1, gds2.Retailer_code AS rc2, COUNT(DISTINCT gds1.Product_number)
+From go_daily_sales gds1, go_daily_sales gds2
+WHERE gds1.Order_method_code = gds2.Order_method_code AND gds1.Retailer_code < gds2.Retailer_code
+AND gds1.Order_method_code = 4 AND gds1.Product_number = gds2.Product_number
+GROUP BY rc1, rc2
